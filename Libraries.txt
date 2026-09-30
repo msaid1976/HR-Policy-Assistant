@@ -1,0 +1,41 @@
+Modular programming 
+    kkeping each pipeline step in a separate file (pipeline.py) then creat a file that call all of it 
+
+
+Jina 
+1- for embedding 
+    https://jina.ai/
+    https://jina.ai/api-dashboard/embedding
+
+
+For Logging  ## (Super grat feature)
+    USe lark
+
+
+
+
+mteb --> tell who are currently leading models 
+    https://huggingface.co/spaces/mteb/leaderboard
+
+Also can search google for "mteb leaderboard embeddings" and choose this to get the best and leading models 
+    https://modal.com/blog/mteb-leaderboard-article
+
+
+
+## VECTORE STORES 
+    # IN MEMORY 
+    # persistent memory - vectors # 100gb - ingestion 
+    # cloud memory 
+
+
+# cloud memory 
+QDRANT
+
+
+
+
+
+
+
+Disadvantages
+    NO LangGraph

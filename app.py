@@ -1,0 +1,57 @@
+"""Streamlit chat app for the HR Policy Assistant.
+
+Run with:  streamlit run app.py
+"""
+
+import streamlit as st
+
+from hr_assistant.logger import get_logger, start_session_logging
+
+logger = get_logger(__name__)
+
+# Streamlit retains ``session_state`` across script reruns for one browser
+# connection. Generate the identifier once so every request from that browser
+# is written to the same log folder.
+if "log_session_id" not in st.session_state:
+    st.session_state.log_session_id = start_session_logging()
+else:
+    start_session_logging(st.session_state.log_session_id)
+
+# Import after the session is initialized so library startup logs are written
+# to this browser's folder instead of creating a bootstrap folder.
+from hr_assistant.pipeline import ask, build_hr_assistant
+
+st.set_page_config(page_title="HR Policy Assistant", page_icon="🤖")
+st.title("🤖 HR Policy Assistant")
+st.caption("Ask me anything about the company HR policy document.")
+
+
+@st.cache_resource(show_spinner="Setting up the assistant (only happens once)...")
+def get_agent():
+    return build_hr_assistant()
+
+
+agent = get_agent()
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Show the past conversation
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Get a new question from the user
+question = st.chat_input("Ask a question about HR policy...")
+
+if question:
+    logger.info("=== Streamlit run: new question received ===")
+    st.session_state.messages.append({"role": "user", "content": question})
+    with st.chat_message("user"):
+        st.markdown(question)
+
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            answer = ask(agent, question)
+        st.markdown(answer)
+    st.session_state.messages.append({"role": "assistant", "content": answer})
