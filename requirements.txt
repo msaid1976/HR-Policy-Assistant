@@ -37,3 +37,7 @@ langchain-openai==1.6.3
 
 # evaluations 
 openevals
+
+# test runner used by the GitHub Actions smoke test
+pytest
+pytest
